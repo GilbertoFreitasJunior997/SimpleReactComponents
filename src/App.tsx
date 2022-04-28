@@ -1,9 +1,12 @@
 import { FC } from "react";
+import Button from "./Components/Button";
 
 const App:FC = () => {
   return (
     <>
-      Hello World!
+      <Button onClick={() => console.log("CLICKED!")}>
+        Thats a cool button!
+      </Button>
     </>
   )
 }
