@@ -1,5 +1,5 @@
-# SimpleReactComponentsLib
-Just a simple components lib made for some projects
+# SimpleReactComponents
+Just some simple components I made for testing
 
 Created with CRA (typescript template)
 Some components for general uses in a display page
