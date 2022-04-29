@@ -7,27 +7,67 @@ interface IModalProps {
     title?: string;
 
     isOpen: boolean;
+    onConfirm: () => Promise<void>;
     onClose: () => void;
+    dontCloseOnConfirm?: boolean;
 
     children?: React.ReactNode;
 }
 
-const Modal: FC<IModalProps> = ({ title, isOpen, onClose, children }) => {
+const popInTimer = 250;
+const popOutTimer = popInTimer / 1.5;
+
+const Modal: FC<IModalProps> = ({ title, isOpen, onConfirm, onClose, dontCloseOnConfirm, children }) => {
+    const modalId = `modal_id_&${Math.random() * Math.random()}`
+
+    const handleClose = () => {
+        const modalElement = document.getElementById(modalId);
+        if (modalElement)
+            modalElement.classList.add("animPopOut");
+
+        setTimeout(() => {
+            onClose();
+        }, popOutTimer)
+    }
+
     const ModalComponent = (
         <BackgroundBlur>
-            <ModalContainer>
+            <ModalContainer
+                className="animPopIn"
+                id={modalId}
+            >
                 {title ?
-                    <>
-                        <TitleContainer>
-                            <ModalTitle>{title}</ModalTitle>
-                        </TitleContainer>
-                        <SectionDivider />
-                    </>
+                    <TitleContainer>
+                        <ModalTitle>{title}</ModalTitle>
+                    </TitleContainer>
                     : null}
-                {children}
 
-                <br />
-                <Button onClick={onClose}>Close</Button>
+                <ContentContainer>
+                    {children}
+                </ContentContainer>
+
+                <FooterContainer>
+                    <FooterItem>
+                        <Button
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button>
+                    </FooterItem>
+                    <FooterItem>
+                        <Button
+                            onClick={async () => {
+                                await onConfirm();
+
+                                if (!dontCloseOnConfirm) {
+                                    handleClose();
+                                }
+                            }}
+                        >
+                            Confirm
+                        </Button>
+                    </FooterItem>
+                </FooterContainer>
             </ModalContainer>
         </BackgroundBlur>
     )
@@ -54,34 +94,94 @@ const BackgroundBlur = styled.div`
     left: 0;
     
     background-color: rgba(0, 0, 0, 0.5);
+
+    @keyframes popIn {
+        from {
+            opacity: 0;
+            transform: scale(0);
+        }
+        75% {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes popOut {
+        from {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        to {
+            opacity: 0.2;
+            transform: scale(0.4);
+        }
+    }
+
+    .animPopIn {
+        animation: popIn ${popInTimer}ms linear forwards;
+    }
+
+    .animPopOut {
+        animation: popOut ${popOutTimer}ms ease-in forwards;
+    }
 `
 
 const ModalContainer = styled.div`
     width: 50vw;
     height: 50vh;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
 
     background-color: white;
     border-radius: 6px;
-    box-shadow: 4px 6px 3px 0px rgba(0, 0, 0, 0.4);
+
+    border: 1px solid rgb(0, 118, 196);
+    box-shadow: 0 3px 4px 1px rgba(0, 188, 246, 0.8);
 `
 
 const TitleContainer = styled.div`
-    width: 100%;
-    height: 10%;
+    width: 90%;
+    margin: 0 auto 4px auto;
+    height: auto;
 
     display: flex;
-    align-items: center;
+    flex-direction: column;
+
+    padding: 5px;
+
+    border-bottom: 1px solid rgb(0, 118, 196);
 `;
 
 const ModalTitle = styled.div`
+    width: 100%;
     margin-left: 10px;
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 25px;
 `;
 
-const SectionDivider = styled.div`
-    width: 80%;
-    margin-right: auto;
-    height: 1px;
+const ContentContainer = styled.div`
+    padding: 10px;
+    margin-bottom: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+`;
 
-    background-image: linear-gradient(to right, #696969, white);
+const FooterContainer = styled.div`
+    width: 90%;
+    margin: 4px auto 0 auto;
+    height: auto;
+
+    display: flex;
+    justify-content: space-between;
+
+    padding: 3px 0;    
+    border-top: 1px solid rgb(0, 118, 196);
+`;
+
+const FooterItem = styled.div`
 `;
