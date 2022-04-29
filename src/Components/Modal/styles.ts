@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Button from "../Button";
+import Button from '../Button/index';
 
 export const popInTimer = 250;
 export const popOutTimer = popInTimer / 1.5;
