@@ -1,4 +1,4 @@
-# SimpleReactComponentsLib
+# SimpleReactComponents
 Just some simple components I made for testing
 
 Created with CRA (typescript template)
