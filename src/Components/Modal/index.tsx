@@ -11,13 +11,15 @@ interface IModalProps {
     onClose: () => void;
     dontCloseOnConfirm?: boolean;
 
+    hideCloseButton?: boolean;
+
     children?: React.ReactNode;
 }
 
 const popInTimer = 250;
 const popOutTimer = popInTimer / 1.5;
 
-const Modal: FC<IModalProps> = ({ title, isOpen, onConfirm, onClose, dontCloseOnConfirm, children }) => {
+const Modal: FC<IModalProps> = ({ title, isOpen, onConfirm, onClose, dontCloseOnConfirm, hideCloseButton, children }) => {
     const modalId = `modal_id_&${Math.random() * Math.random()}`
 
     const handleClose = () => {
@@ -36,6 +38,15 @@ const Modal: FC<IModalProps> = ({ title, isOpen, onConfirm, onClose, dontCloseOn
                 className="animPopIn"
                 id={modalId}
             >
+                {!hideCloseButton &&
+                    <CloseButtonContainer>
+                        <CloseButton
+                            onClick={handleClose}
+                        >
+                            X
+                        </CloseButton>
+                    </CloseButtonContainer>}
+
                 {title ?
                     <TitleContainer>
                         <ModalTitle>{title}</ModalTitle>
@@ -135,12 +146,29 @@ const ModalContainer = styled.div`
     padding: 10px;
     display: flex;
     flex-direction: column;
+    position: relative;
 
     background-color: white;
     border-radius: 6px;
 
     border: 1px solid rgb(0, 118, 196);
     box-shadow: 0 3px 4px 1px rgba(0, 188, 246, 0.8);
+`
+
+const CloseButtonContainer = styled.div`
+    position: fixed;
+    top: -15px;
+    right: -15px;
+`
+const CloseButton = styled(Button)`
+    transform: scale(0.7);
+    color: white;
+    font-weight: bolder;
+    font-size: 15px;
+
+    :hover{
+        transform: scale(0.8);
+    }
 `
 
 const TitleContainer = styled.div`
