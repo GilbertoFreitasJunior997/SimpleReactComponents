@@ -23,7 +23,7 @@ const Stepper: FC<IStepperProps> = ({ step, totalSteps }) => {
                     <StepContainer key={i}>
                         {i > 0 && <StepDivider isActive={isActive} />}
                         <Step isActive={isActive} isSelected={isSelected}>
-                            {isSelected ? null : isActive ? <MdCheck /> : i}
+                            {(isActive && !isSelected) ? <MdCheck /> : i + 1}
                         </Step>
                     </StepContainer>
                 )
@@ -40,10 +40,22 @@ const StepperContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 55px;
 `;
 
 const StepContainer = styled.div`
     display: flex;
+
+    @keyframes changeStep {
+        from {
+            font-size: 15px;
+        }
+        to {
+            font-size: 20px;
+            width: 55px;
+            height: 55px;
+        }
+    }
 `
 
 const Step = styled.div<{
@@ -63,7 +75,13 @@ const Step = styled.div<{
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: ${p => p.isActive ? "20px" : "15px"};
+
+    margin: 5px;
+
+    ${p => p.isSelected ?
+        `animation: changeStep linear 150ms forwards`
+        : ""
+    }
 `;
 
 const StepDivider = styled.div<{
