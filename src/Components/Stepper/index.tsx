@@ -7,15 +7,10 @@ const selectedColor = "rgb(0,48,136)";
 const disabledColor = "rgb(0,178,256)";
 const activeColor = "rgb(0,88,176)";
 
-const Stepper: FC<IStepperProps> = ({ step, totalSteps }) => {
-    const total = [];
-
-    for (let i = 0; i < totalSteps; i++)
-        total.push(i);
-
+const Stepper: FC<IStepperProps> = ({ step, steps }) => {
     return (
         <StepperContainer>
-            {total.map(i => {
+            {steps.map((text, i) => {
                 const isActive = i <= step;
                 const isSelected = i === step;
 
@@ -24,6 +19,9 @@ const Stepper: FC<IStepperProps> = ({ step, totalSteps }) => {
                         {i > 0 && <StepDivider isActive={isActive} />}
                         <Step isActive={isActive} isSelected={isSelected}>
                             {(isActive && !isSelected) ? <MdCheck /> : i + 1}
+                            <Text>
+                                {text}
+                            </Text>
                         </Step>
                     </StepContainer>
                 )
@@ -41,10 +39,12 @@ const StepperContainer = styled.div`
     justify-content: center;
     align-items: center;
     height: 55px;
+    padding-bottom: 10px;
 `;
 
 const StepContainer = styled.div`
     display: flex;
+    position: relative;
 
     @keyframes changeStep {
         from {
@@ -77,11 +77,21 @@ const Step = styled.div<{
     color: white;
 
     margin: 5px;
+    margin-bottom: 20px;
 
-    ${p => p.isSelected ?
+    ${p => p.isSelected &&
         `animation: changeStep linear 150ms forwards`
-        : ""
     }
+`;
+
+
+const Text = styled.div`
+    position: absolute;
+    color: black;
+    width: fit-content;
+    font-size: 15px;
+    font-weight: 500;
+    bottom: 0px;
 `;
 
 const StepDivider = styled.div<{

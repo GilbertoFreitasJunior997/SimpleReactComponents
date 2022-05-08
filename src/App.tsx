@@ -6,19 +6,19 @@ import Stepper from "./Components/Stepper";
 const App: FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currStep, setCurrStep] = useState(0);
-  const totalSteps = 4;
+  const steps = ["Step one", "Step two", "Step three", "Step four"]
 
   return (
     <>
       <Stepper
         step={currStep}
-        totalSteps={totalSteps}
+        steps={steps}
       />
       <div style={{width: "90%", margin: "10px auto", display: "flex", justifyContent: "space-between"}}>
         <Button onClick={() => currStep - 1 >= 0 && setCurrStep(v => v - 1)}>
           Prev
         </Button>
-        <Button onClick={() => currStep + 1 < totalSteps && setCurrStep(v => v + 1)}>
+        <Button onClick={() => currStep + 1 < steps.length && setCurrStep(v => v + 1)}>
           Next
         </Button>
       </div>
